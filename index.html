@@ -1,297 +1,673 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoSort - Pengenal & Edukasi Sampah Interaktif</title>
+    <title>EcoSort - Platform Pemilahan Sampah Interaktif</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-emerald-50 text-slate-800 font-sans min-h-screen flex flex-col">
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            950: '#052e16',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Keyframe Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    <!-- Header / Navbar -->
-    <header class="bg-emerald-700 text-white shadow-md sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <i class="fa-solid font-bold fa-recycle text-3xl text-emerald-300"></i>
-                <h1 class="text-2xl font-bold tracking-wide">EcoSort</h1>
+        @keyframes pulseSlow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .pulse-element {
+            animation: pulseSlow 3s infinite ease-in-out;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #10b981;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #059669;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+    <!-- Header / Navbar Elegan -->
+    <header class="bg-slate-900/90 backdrop-blur-md text-white sticky top-0 z-40 border-b border-slate-800 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-teal-400 flex items-center justify-center text-white shadow-lg shadow-brand-500/30 group-hover:scale-105 transition duration-300">
+                    <i class="fa-solid fa-leaf text-xl"></i>
+                </div>
+                <div>
+                    <span class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-white via-emerald-200 to-teal-400 bg-clip-text text-transparent">EcoSort</span>
+                    <span class="block text-[10px] text-emerald-400 tracking-widest uppercase font-semibold">Eco Intelligence</span>
+                </div>
+            </a>
+
+            <!-- Nav Links & Call Center Button -->
+            <div class="flex items-center gap-6">
+                <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                    <a href="#katalog" class="hover:text-brand-400 transition">Katalog Sampah</a>
+                    <a href="#kuis" class="hover:text-brand-400 transition">Kuis Interaktif</a>
+                    <a href="#kontak" class="hover:text-brand-400 transition">Call Center</a>
+                </nav>
+
+                <!-- Hotline Quick Action -->
+                <a href="https://wa.me/62895630624073" target="_blank" class="hidden sm:flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md hover:shadow-emerald-500/25 transition duration-300">
+                    <i class="fa-brands fa-whatsapp text-base"></i>
+                    <span>Call Center</span>
+                </a>
             </div>
-            <nav class="flex gap-4 text-sm font-semibold">
-                <a href="#katalog" class="hover:text-emerald-200 transition">Katalog Sampah</a>
-                <a href="#kuis" class="hover:text-emerald-200 transition">Kuis Pemilahan</a>
-            </nav>
         </div>
     </header>
 
-    <!-- Hero Banner -->
-    <section class="bg-emerald-800 text-white py-12 px-4 text-center">
-        <div class="max-w-3xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Kenali, Pilih, dan Kelola Sampah dengan Benar</h2>
-            <p class="text-emerald-100 text-base md:text-lg mb-6">Pahami jenis sampah, dampak buruk pencemaran, serta solusi konkret untuk menjaga kelestarian lingkungan bersama EcoSort.</p>
+    <!-- Hero Section dengan Gradien Modern -->
+    <section class="relative bg-slate-900 text-white overflow-hidden py-20 lg:py-28">
+        <!-- Glow Backdrop -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 right-10 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/80 border border-slate-700 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-6 animate-fade-in">
+                <i class="fa-solid fa-sparkles"></i> Solusi Cerdas Pengelolaan Lingkungan
+            </span>
+            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight max-w-4xl mx-auto">
+                Pilah Sampah dengan Tepat, Ciptakan Lingkungan Bebas Polusi
+            </h1>
+            <p class="text-slate-400 text-base sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+                Pelajari 12+ jenis sampah harian, analisis dampak pencemaran, dan temukan langkah nyata penanganannya secara interaktif bersama <strong class="text-emerald-400">EcoSort</strong>.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#katalog" class="bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold px-8 py-4 rounded-xl shadow-lg shadow-brand-500/20 hover:scale-105 transition duration-300">
+                    Jelajahi Katalog <i class="fa-solid fa-arrow-down ml-2"></i>
+                </a>
+                <a href="tel:+62895630624073" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold px-8 py-4 rounded-xl border border-slate-700 hover:border-slate-600 transition duration-300 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-headset text-emerald-400"></i> Layanan Pengaduan
+                </a>
+            </div>
         </div>
     </section>
 
-    <!-- Main Content Container -->
-    <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full space-y-12">
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-20 flex-grow w-full">
 
-        <!-- Section: Katalog Sampah -->
-        <section id="katalog" class="scroll-mt-20">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <!-- Section: Katalog Sampah Interaktif -->
+        <section id="katalog" class="scroll-mt-28">
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-10 gap-6">
                 <div>
-                    <h3 class="text-2xl font-bold text-emerald-900">Katalog Sampah</h3>
-                    <p class="text-slate-600 text-sm">Cari atau filter jenis sampah untuk melihat detail penjelasan dan penanganannya.</p>
+                    <h2 class="text-3xl font-bold text-slate-900 tracking-tight">Katalog & Identifikasi Sampah</h2>
+                    <p class="text-slate-500 mt-2 text-sm sm:text-base">Gunakan pencarian atau filter kategori untuk memilah informasi sampah secara spesifik.</p>
                 </div>
-                
-                <!-- Search & Filter Controls -->
-                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-                    <input type="text" id="searchInput" placeholder="Cari nama sampah..." 
-                           class="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 w-full sm:w-64">
-                    <select id="filterSelect" class="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                        <option value="all">Semua Kategori</option>
-                        <option value="Organik">Organik</option>
-                        <option value="Anorganik">Anorganik</option>
-                        <option value="B3">B3 (Berbahaya)</option>
-                    </select>
+
+                <!-- Control Bar: Search & Filter -->
+                <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                    <!-- Search Input -->
+                    <div class="relative w-full sm:w-72">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="searchInput" placeholder="Cari jenis sampah..." 
+                               class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition">
+                    </div>
+                    <!-- Filter Tabs -->
+                    <div class="flex p-1 bg-slate-200/80 rounded-xl gap-1">
+                        <button class="filter-btn active px-4 py-2 rounded-lg text-xs font-bold transition text-slate-700 hover:text-slate-900" data-filter="all">Semua</button>
+                        <button class="filter-btn px-4 py-2 rounded-lg text-xs font-bold transition text-slate-700 hover:text-slate-900" data-filter="Organik">Organik</button>
+                        <button class="filter-btn px-4 py-2 rounded-lg text-xs font-bold transition text-slate-700 hover:text-slate-900" data-filter="Anorganik">Anorganik</button>
+                        <button class="filter-btn px-4 py-2 rounded-lg text-xs font-bold transition text-slate-700 hover:text-slate-900" data-filter="B3">B3</button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Cards Container -->
-            <div id="wasteGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Diisi otomatis oleh JavaScript -->
+            <!-- Grid Kartu Sampah -->
+            <div id="wasteGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Kartu di-generate oleh JS -->
             </div>
         </section>
 
-        <!-- Section: Kuis Interaktif -->
-        <section id="kuis" class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-emerald-100 scroll-mt-20">
-            <div class="text-center mb-6">
-                <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase">Uji Pengetahuan</span>
-                <h3 class="text-2xl font-bold text-slate-800 mt-2">Kuis Pemilahan EcoSort</h3>
-                <p class="text-slate-600 text-sm mt-1">Tebak kategori sampah berikut untuk melatih kebiasaan pemilahan harian Anda.</p>
-            </div>
+        <!-- Section: Kuis Pemilahan Sampah -->
+        <section id="kuis" class="scroll-mt-28 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-8 lg:p-12 text-white relative overflow-hidden shadow-2xl border border-slate-800">
+            <!-- Ambient Glow -->
+            <div class="absolute -top-24 -right-24 w-72 h-72 bg-brand-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
-            <div id="quizContainer" class="max-w-xl mx-auto">
-                <div class="mb-4 flex justify-between items-center text-sm font-semibold text-slate-500">
-                    <span id="quizProgress">Pertanyaan 1 dari 3</span>
-                    <span id="quizScoreText">Skor: 0</span>
+            <div class="max-w-2xl mx-auto relative z-10">
+                <div class="text-center mb-8">
+                    <span class="inline-block bg-brand-500/20 text-brand-300 border border-brand-500/30 text-xs font-extrabold px-4 py-1.5 rounded-full uppercase tracking-widest mb-3">
+                        Uji Pemahaman Anda
+                    </span>
+                    <h2 class="text-3xl font-extrabold text-white">Kuis Pemilahan EcoSort</h2>
+                    <p class="text-slate-400 text-sm mt-2">Latih ketangkasan Anda dalam membedakan kategori sampah sehari-hari.</p>
                 </div>
 
-                <div class="bg-emerald-50 p-6 rounded-xl border border-emerald-200 text-center mb-6">
-                    <h4 id="quizQuestion" class="text-lg font-bold text-emerald-950">Loading pertanyaan...</h4>
+                <!-- Progress Bar -->
+                <div class="mb-6">
+                    <div class="flex justify-between text-xs font-bold text-slate-400 mb-2">
+                        <span id="quizProgressText">Pertanyaan 1 dari 5</span>
+                        <span id="quizScoreText" class="text-brand-400">Skor: 0</span>
+                    </div>
+                    <div class="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
+                        <div id="progressBar" class="bg-gradient-to-r from-brand-500 to-teal-400 h-full w-1/5 transition-all duration-500"></div>
+                    </div>
                 </div>
 
+                <!-- Pertanyaan Card -->
+                <div class="bg-slate-800/90 border border-slate-700/80 p-6 sm:p-8 rounded-2xl shadow-inner mb-6 text-center">
+                    <span class="text-xs text-slate-400 uppercase tracking-widest font-semibold block mb-2">Termasuk Jenis Sampah Apakah Ini?</span>
+                    <h3 id="quizQuestion" class="text-xl sm:text-2xl font-bold text-emerald-300">Loading pertanyaan...</h3>
+                </div>
+
+                <!-- Opsi Jawaban -->
                 <div id="quizOptions" class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
                     <!-- Tombol Opsi Jawaban -->
                 </div>
 
-                <div id="quizFeedback" class="hidden p-4 rounded-lg text-center font-semibold text-sm mb-4"></div>
+                <!-- Alert Feedback -->
+                <div id="quizFeedback" class="hidden p-4 rounded-xl text-center font-semibold text-sm mb-6 transition-all"></div>
 
+                <!-- Action Controls -->
                 <div class="text-center">
-                    <button id="nextBtn" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-6 rounded-lg transition">
-                        Pertanyaan Selanjutnya <i class="fa-solid fa-arrow-right ml-1"></i>
+                    <button id="nextBtn" class="hidden bg-brand-500 hover:bg-brand-600 text-slate-950 font-bold py-3 px-8 rounded-xl transition duration-300 shadow-lg shadow-brand-500/25">
+                        Lanjut Pertanyaan <i class="fa-solid fa-arrow-right ml-2"></i>
                     </button>
-                    <button id="restartBtn" class="hidden bg-emerald-800 hover:bg-emerald-900 text-white font-bold py-2 px-6 rounded-lg transition">
-                        Ulangi Kuis <i class="fa-solid fa-rotate-right ml-1"></i>
+                    <button id="restartBtn" class="hidden bg-teal-500 hover:bg-teal-600 text-slate-950 font-bold py-3 px-8 rounded-xl transition duration-300 shadow-lg shadow-teal-500/25">
+                        Ulangi Kuis <i class="fa-solid fa-arrow-rotate-right ml-2"></i>
                     </button>
                 </div>
             </div>
         </section>
+
+        <!-- Section: Call Center & Pengaduan Lingkungan -->
+        <section id="kontak" class="scroll-mt-28 bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/80 shadow-xl relative overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div>
+                    <span class="text-xs font-extrabold text-brand-600 uppercase tracking-widest bg-brand-50 px-3 py-1 rounded-full border border-brand-200">Hubungi Kami</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900 mt-4 leading-tight">Temukan Tumpukan Sampah Liar atau Butuh Bantuan?</h2>
+                    <p class="text-slate-600 mt-4 leading-relaxed text-sm sm:text-base">
+                        Tim tanggap lingkungan EcoSort siap melayani konsultasi pemilahan, penjemputan sampah terpilah, dan laporan lokasi pencemaran.
+                    </p>
+                    <div class="mt-8 space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 font-semibold block">Layanan Telepon Langsung</span>
+                                <a href="tel:+62895630624073" class="text-lg font-bold text-slate-900 hover:text-emerald-600 transition">+62 895-6306-24073</a>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 font-semibold block">Chat WhatsApp (24 Jam)</span>
+                                <a href="https://wa.me/62895630624073" target="_blank" class="text-lg font-bold text-slate-900 hover:text-teal-600 transition">+62 895-6306-24073</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 text-white p-8 rounded-2xl relative shadow-2xl border border-slate-800">
+                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane text-emerald-400"></i> Kirim Laporan Cepat
+                    </h3>
+                    <form id="contactForm" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">Nama Lengkap</label>
+                            <input type="text" required placeholder="Masukkan nama Anda..." class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-brand-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">Pesan / Laporan</label>
+                            <textarea rows="3" required placeholder="Tuliskan kendala atau lokasi pencemaran sampah..." class="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-brand-500"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-slate-950 font-bold py-3 rounded-xl transition duration-300">
+                            Kirim via WhatsApp <i class="fa-brands fa-whatsapp ml-1"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
     </main>
 
+    <!-- Modal Pop-up Detail Sampah -->
+    <div id="detailModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white max-w-xl w-full rounded-3xl p-6 sm:p-8 shadow-2xl relative transform scale-95 transition-transform duration-300" id="modalContent">
+            <!-- Close Button -->
+            <button id="closeModalBtn" class="absolute top-6 right-6 w-10 h-10 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div id="modalBody">
+                <!-- Diisi via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating WhatsApp Call Center Widget -->
+    <a href="https://wa.me/62895630624073" target="_blank" 
+       class="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-extrabold px-4 py-3 rounded-full shadow-2xl flex items-center gap-3 hover:scale-105 transition-transform duration-300 group border border-emerald-300">
+        <div class="w-8 h-8 rounded-full bg-slate-950 text-emerald-400 flex items-center justify-center text-lg">
+            <i class="fa-brands fa-whatsapp"></i>
+        </div>
+        <div class="text-left hidden sm:block pr-2">
+            <span class="block text-[10px] text-slate-900 uppercase font-black tracking-wider leading-none">Call Center</span>
+            <span class="text-xs font-extrabold">+62 895-6306-24073</span>
+        </div>
+    </a>
+
     <!-- Footer -->
-    <footer class="bg-slate-800 text-slate-400 py-6 text-center text-sm">
-        <p>&copy; 2026 EcoSort. Edukasi Lingkungan Interaktif & Pemilahan Sampah Modern.</p>
+    <footer class="bg-slate-950 text-slate-400 border-t border-slate-800 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+            <div class="flex items-center justify-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-brand-500 flex items-center justify-center text-slate-950 font-bold">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+                <span class="text-xl font-extrabold text-white">EcoSort</span>
+            </div>
+            <p class="text-xs text-slate-500 max-w-md mx-auto">Platform edukasi pemilahan sampah modern untuk menjaga ekosistem bumi secara berkelanjutan.</p>
+            <p class="text-xs text-slate-600">&copy; 2026 EcoSort. Hotline Service: <a href="tel:+62895630624073" class="text-emerald-400 hover:underline">+62 895-6306-24073</a></p>
+        </div>
     </footer>
 
     <!-- JavaScript Application Logic -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Data Sampah Lengkap
+
+            // 12 Sampel Data Sampah Lengkap (Organik, Anorganik, B3)
             const wasteData = [
                 {
                     id: 'sisa-makanan',
-                    nama: 'Sisa Makanan & Sayuran',
+                    nama: 'Sisa Makanan & Sayur',
                     kategori: 'Organik',
                     waktuUrai: '1 - 2 Minggu',
-                    deskripsi: 'Sisa bahan dapur, sisa makanan basi, dan potongan sayuran rumah tangga.',
-                    kelebihan: 'Dapat diolah menjadi kompos alami kaya nutrisi atau pupuk organik cair untuk tanaman.',
-                    kekurangan: 'Menimbulkan bau busuk, gas metana beracun jika menumpuk di TPA tanpa udara, dan memancing hama.',
-                    solusi: 'Kelola dengan komposter rumah tangga, lubang biopori, atau dijadikan pakan maggot.'
+                    icon: 'fa-utensils',
+                    deskripsi: 'Sisa bahan masakan, sisa piring, potongan sayuran, dan sisa buah.',
+                    kelebihan: 'Dapat diolah menjadi pupuk kompos organik kaya hara atau pakan budidaya maggot BSF.',
+                    kekurangan: 'Menimbulkan bau pembusukan menyengat, menarik vektor penyakit (lalat/tikus), dan menghasilkan gas metana.',
+                    solusi: 'Kelola dengan komposter takakura, lubang biopori, atau pisahkan langsung ke tempat sampah hijau.'
                 },
                 {
-                    id: 'botol-plastik',
-                    nama: 'Botol Plastik (PET)',
+                    id: 'daun-kering',
+                    nama: 'Daun & Ranting Kering',
+                    kategori: 'Organik',
+                    waktuUrai: '1 - 3 Bulan',
+                    icon: 'fa-leaf',
+                    deskripsi: 'Guguran daun pohon, sisa pangkasan rumput, dan ranting kayu kecil.',
+                    kelebihan: 'Bahan baku utama pupuk kompos (unsur Karbon tinggi) dan penutup tanah (mulsa alami).',
+                    kekurangan: 'Sering dibakar sembarangan sehingga menimbulkan polusi asap berbahaya bagi pernapasan.',
+                    solusi: 'Jangan dibakar! Cacah dan tumpuk untuk pembuatan kompos humus alami.'
+                },
+                {
+                    id: 'kotoran-hewan',
+                    nama: 'Kotoran Hewan Ternak',
+                    kategori: 'Organik',
+                    waktuUrai: '2 - 4 Minggu',
+                    icon: 'fa-cow',
+                    deskripsi: 'Kotoran dari hewan peliharaan atau ternak seperti sapi, kambing, dan ayam.',
+                    kelebihan: 'Sumber energi terbarukan Biogas yang sangat potensial dan pupuk kandang berkualitas tinggi.',
+                    kekurangan: 'Mencemari air tanah dan menimbulkan bau jika tidak diolah dengan fermentasi.',
+                    solusi: 'Masuk ke dalam reaktor biogas atau fermentasi dengan M4 menjadi pupuk kandang matang.'
+                },
+                {
+                    id: 'botol-pet',
+                    nama: 'Botol Plastik PET',
                     kategori: 'Anorganik',
                     waktuUrai: '450 Tahun',
-                    deskripsi: 'Botol kemasan minuman sekali pakai berbahan Polyethylene Terephthalate.',
-                    kelebihan: 'Sangat mudah didaur ulang menjadi serat tekstil, botol baru, atau produk kerajinan.',
-                    kekurangan: 'Sangat lama terurai, pecah menjadi mikroplastik yang mencemari lautan dan rantai makanan.',
-                    solusi: 'Terapkan 3R (Reduce, Reuse, Recycle), remukkan botol dan kumpulkan ke Bank Sampah terdekat.'
+                    icon: 'fa-bottle-water',
+                    deskripsi: 'Botol kemasan air mineral dan minuman berbahan Polyethylene Terephthalate.',
+                    kelebihan: 'Nilai daur ulang sangat tinggi; dapat diproses jadi bijih plastik, kain dakron, atau pakaian.',
+                    kekurangan: 'Sangat lambat hancur, menyumbat saluran air, dan terpecah menjadi mikroplastik di laut.',
+                    solusi: 'Remukkan botol, pilah dari tutupnya, lalu setorkan ke Bank Sampah terdekat.'
+                },
+                {
+                    id: 'kaleng-alumunium',
+                    nama: 'Kaleng Alumunium',
+                    kategori: 'Anorganik',
+                    waktuUrai: '80 - 200 Tahun',
+                    icon: 'fa-wine-can',
+                    deskripsi: 'Kaleng bekas minuman bersoda, krimer, atau makanan kaleng.',
+                    kelebihan: 'Dapat didaur ulang 100% berulang kali tanpa menurunkan kualitas bahan aslinya.',
+                    kekurangan: 'Proses penambangan bijih alumunium baru merusak lingkungan jika tidak didaur ulang.',
+                    solusi: 'Bersihkan sisa cairan di dalamnya, kempeskan, dan kumpulkan ke pengumpul daur ulang logam.'
+                },
+                {
+                    id: 'kaca-botol',
+                    nama: 'Botol & Pecahan Kaca',
+                    kategori: 'Anorganik',
+                    waktuUrai: '1 Juta Tahun',
+                    icon: 'fa-glass-water',
+                    deskripsi: 'Botol sirup, toples kaca, dan pecahan kaca jendela.',
+                    kelebihan: 'Dapat dilelehkan dan dibentuk kembali menjadi wadah kaca baru secara terus-menerus.',
+                    kekurangan: 'Berisiko melukai petugas kebersihan dan tidak bisa terurai alami di tanah.',
+                    solusi: 'Bungkus pecahan kaca dengan koran tebal atau kardus sebelum disalurkan ke daur ulang.'
+                },
+                {
+                    id: 'kardus-kertas',
+                    nama: 'Kardus & Kertas Bekas',
+                    kategori: 'Anorganik',
+                    waktuUrai: '2 - 5 Bulan',
+                    icon: 'fa-box',
+                    deskripsi: 'Kardus pembungkus paket, koran bekas, buku, dan kertas HVS.',
+                    kelebihan: 'Sangat mudah didaur ulang menjadi kertas daur ulang atau tempat telur (egg tray).',
+                    kekurangan: 'Penebangan pohon massal terjadi jika konsumsi kertas tidak diimbangi daur ulang.',
+                    solusi: 'Jaga tetap kering, lipat hingga pipih, lalu kirim ke bank sampah.'
+                },
+                {
+                    id: 'styrofoam',
+                    nama: 'Kemasan Styrofoam',
+                    kategori: 'Anorganik',
+                    waktuUrai: 'Tidak Bisa Terurai',
+                    deskripsi: 'Wadah makanan sekali pakai berbahan Polystyrene.',
+                    kelebihan: 'Ringan dan mampu menahan suhu panas/dingin secara sementara.',
+                    kekurangan: 'Mengandung zat benzena beracun, sangat rapuh, dan hampir tidak diakui di pabrik daur ulang biasa.',
+                    solusi: 'Hindari penggunaan (Reduce). Ganti dengan wadah makanan yang bisa dipakai berulang kali.'
                 },
                 {
                     id: 'baterai-bekas',
                     nama: 'Baterai Bekas',
                     kategori: 'B3',
                     waktuUrai: 'Tidak Bisa Terurai',
-                    deskripsi: 'Baterai bekas perangkat elektronik yang mengandung logam berat berbahaya (merkuri, kadmium, timbal).',
-                    kelebihan: 'Dapat didaur ulang secara khusus oleh industri untuk mengekstrak kembali elemen logam mulianya.',
-                    kekurangan: 'Bahan kimia beracun dapat bocor, meresap ke tanah, dan mencemari air tanah warga.',
-                    solusi: 'Pisahkan dari sampah biasa. Buang di e-waste drop box atau tempat penampungan B3 khusus.'
+                    deskripsi: 'Baterai jam dinding, remote, atau baterai laptop/HP yang sudah rusak.',
+                    kelebihan: 'Logam di dalamnya (litium, nikel, kadmium) dapat diekstrak kembali oleh fasilitas khusus.',
+                    kekurangan: 'Sangat beracun! Logam berat dapat meresap ke tanah dan meracuni sumber air minum.',
+                    solusi: 'Pisahkan dalam wadah khusus B3, kumpulkan ke Dropbox E-Waste resmi.'
                 },
                 {
-                    id: 'kardus-kertas',
-                    nama: 'Kardus & Kemasan Kertas',
-                    kategori: 'Anorganik',
-                    waktuUrai: '2 - 5 Bulan',
-                    deskripsi: 'Kardus pembungkus paket, kotak sereal, dan kertas cetak bekas.',
-                    kelebihan: 'Sangat bernilai ekonomi untuk daur ulang kertas dan mudah terurai dibanding plastik.',
-                    kekurangan: 'Penggunaan berlebihan berkontribusi pada penebangan hutan (deforestasi). Sampah kertas basah sulit didaur ulang.',
-                    solusi: 'Lipat rapi dalam kondisi kering, kumpulkan untuk dijual ke pengepul atau disalurkan ke pabrik daur ulang.'
+                    id: 'lampu-bohlam',
+                    nama: 'Lampu TL / Bohlam Rusak',
+                    kategori: 'B3',
+                    waktuUrai: 'Tidak Bisa Terurai',
+                    deskripsi: 'Lampu neon, LED, atau bohlam pijar yang sudah putus.',
+                    kelebihan: 'Komponen kaca dan kawatnya dapat diproses kembali di fasilitas olah B3.',
+                    kekurangan: 'Lampu TL mengandung uap merkuri yang sangat berbahaya bagi saraf manusia jika dihirup.',
+                    solusi: 'Jangan dipecahkan! Masukkan ke wadah pelindung dan serahkan ke TPS B3.'
+                },
+                {
+                    id: 'botol-deterjen',
+                    nama: 'Kemasan Obat Nyamuk & Racun',
+                    kategori: 'B3',
+                    waktuUrai: 'Ratusan Tahun',
+                    icon: 'fa-spray-can-sparkles',
+                    deskripsi: 'Kaleng aerosol sisa pembasmi serangga, cairan pembersih karat, dan pestisida.',
+                    kelebihan: 'Wadah kalengnya bernilai jika telah didekontaminasi oleh unit profesional.',
+                    kekurangan: 'Berisiko meledak jika terkena panas tinggi dan mengandung racun kimia aktif.',
+                    solusi: 'Jangan ditusuk atau dibakar! Serahkan langsung ke dropbox B3 terdekat.'
+                },
+                {
+                    id: 'masker-medis',
+                    nama: 'Masker & Jarum Suntik Medis',
+                    kategori: 'B3',
+                    waktuUrai: '450 Tahun',
+                    icon: 'fa-head-side-mask',
+                    deskripsi: 'Masker medis sekali pakai, perban bekas, dan spuit medis rumah tangga.',
+                    kelebihan: 'Penggunaan sekali pakai efektif mencegah penularan penyakit infeksius.',
+                    kekurangan: 'Berpotensi membawa virus/bakteri patogen serta mencemari lingkungan.',
+                    solusi: 'Gunting tali masker, desinfeksi dengan alkohol, bungkus plastik tertutup sebelum dibuang.'
                 }
             ];
 
-            // Data Kuis
-            const quizData = [
-                {
-                    item: "Kulit Pisang & Daun Kering",
-                    jawaban: "Organik",
-                    penjelasan: "Merupakan bahan alami yang dapat membusuk dan terurai secara biologis."
-                },
-                {
-                    item: "Kantong Plastik Kresek",
-                    jawaban: "Anorganik",
-                    penjelasan: "Merupakan bahan sintetis buatan manusia yang membutuhkan waktu ratusan tahun untuk hancur."
-                },
-                {
-                    item: "Lampu TL / Bohlam Rusak",
-                    jawaban: "B3",
-                    penjelasan: "Mengandung gas merkuri beracun yang berbahaya jika pecah dan mengenai manusia."
-                }
+            // Kuis Data
+            const quizQuestions = [
+                { item: "Botol Plastik Air Mineral (PET)", jawaban: "Anorganik", penjelasan: "Plastik PET adalah bahan sintetis yang membutuhkan waktu sekitar 450 tahun untuk terurai." },
+                { item: "Sisa Makanan & Kulit Buah", jawaban: "Organik", penjelasan: "Merupakan sampah hayati yang dapat terurai alami menjadi kompos kaya nutrisi." },
+                { item: "Baterai Laptop & Remot Bekas", jawaban: "B3", penjelasan: "Mengandung logam berat beracun (Litium/Kadmium) yang merusak tanah dan air tanah." },
+                { item: "Kardus Bekas Kemasan Paket", jawaban: "Anorganik", penjelasan: "Kertas/Kardus berasal dari serat kayu yang dapat didaur ulang menjadi kertas baru." },
+                { item: "Lampu Neon (TL) Pecah", jawaban: "B3", penjelasan: "Lampu TL mengandung uap merkuri beracun yang membahayakan sistem pernapasan." }
             ];
 
-            // Render Katalog Sampah
+            // Elements Selector
             const wasteGrid = document.getElementById('wasteGrid');
             const searchInput = document.getElementById('searchInput');
-            const filterSelect = document.getElementById('filterSelect');
+            const filterBtns = document.querySelectorAll('.filter-btn');
 
-            function renderCards(data) {
+            let currentFilter = 'all';
+
+            // Render Kartu Sampah dengan Animasi
+            function renderCards() {
+                const searchKeyword = searchInput.value.toLowerCase();
                 wasteGrid.innerHTML = '';
-                if (data.length === 0) {
-                    wasteGrid.innerHTML = `<div class="col-span-full text-center py-8 text-slate-500">Tidak ada data sampah yang sesuai dengan pencarian.</div>`;
+
+                const filtered = wasteData.filter(item => {
+                    const matchSearch = item.nama.toLowerCase().includes(searchKeyword) || item.deskripsi.toLowerCase().includes(searchKeyword);
+                    const matchFilter = currentFilter === 'all' || item.kategori === currentFilter;
+                    return matchSearch && matchFilter;
+                });
+
+                if (filtered.length === 0) {
+                    wasteGrid.innerHTML = `
+                        <div class="col-span-full text-center py-12 bg-white rounded-2xl border border-slate-200">
+                            <i class="fa-solid fa-box-open text-4xl text-slate-300 mb-3"></i>
+                            <p class="text-slate-500 font-semibold">Tidak ditemukan jenis sampah yang sesuai.</p>
+                        </div>
+                    `;
                     return;
                 }
 
-                data.forEach(item => {
-                    let categoryColor = 'bg-slate-100 text-slate-800 border-slate-300';
-                    if (item.kategori === 'Organik') categoryColor = 'bg-emerald-100 text-emerald-800 border-emerald-300';
-                    if (item.kategori === 'Anorganik') categoryColor = 'bg-blue-100 text-blue-800 border-blue-300';
-                    if (item.kategori === 'B3') categoryColor = 'bg-rose-100 text-rose-800 border-rose-300';
+                filtered.forEach((item, index) => {
+                    let badgeBg = 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                    let iconBg = 'bg-emerald-100 text-emerald-600';
+                    if (item.kategori === 'Anorganik') {
+                        badgeBg = 'bg-sky-50 text-sky-700 border-sky-200';
+                        iconBg = 'bg-sky-100 text-sky-600';
+                    } else if (item.kategori === 'B3') {
+                        badgeBg = 'bg-rose-50 text-rose-700 border-rose-200';
+                        iconBg = 'bg-rose-100 text-rose-600';
+                    }
 
                     const card = document.createElement('div');
-                    card.className = "bg-white p-6 rounded-2xl shadow-md border border-slate-100 flex flex-col justify-between hover:shadow-lg transition";
+                    card.className = "bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group cursor-pointer animate-fade-in";
+                    card.style.animationDelay = `${index * 0.05}s`;
+
                     card.innerHTML = `
                         <div>
-                            <div class="flex justify-between items-start mb-3">
-                                <h4 class="text-xl font-bold text-slate-800">${item.nama}</h4>
-                                <span class="text-xs font-bold px-3 py-1 rounded-full border ${categoryColor}">${item.kategori}</span>
-                            </div>
-                            <p class="text-slate-600 text-sm mb-4">${item.deskripsi}</p>
-                            
-                            <div class="text-xs font-semibold text-slate-500 mb-4 flex items-center gap-1">
-                                <i class="fa-regular fa-clock text-emerald-600"></i> Waktu Urai: <span class="text-slate-700">${item.waktuUrai}</span>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-12 h-12 rounded-xl ${iconBg} flex items-center justify-center text-xl font-bold group-hover:scale-110 transition duration-300">
+                                    <i class="fa-solid ${item.icon || 'fa-trash-can'}"></i>
+                                </div>
+                                <span class="text-xs font-bold px-3 py-1 rounded-full border ${badgeBg}">
+                                    ${item.kategori}
+                                </span>
                             </div>
 
-                            <div class="space-y-3 text-sm">
-                                <div class="bg-emerald-50 p-3 rounded-lg border-l-4 border-emerald-500">
-                                    <strong class="text-emerald-900 block mb-0.5"><i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Kelebihan / Manfaat:</strong>
-                                    <p class="text-slate-700">${item.kelebihan}</p>
-                                </div>
-                                <div class="bg-rose-50 p-3 rounded-lg border-l-4 border-rose-500">
-                                    <strong class="text-rose-900 block mb-0.5"><i class="fa-solid fa-circle-exclamation text-rose-600 mr-1"></i> Kekurangan / Dampak:</strong>
-                                    <p class="text-slate-700">${item.kekurangan}</p>
-                                </div>
-                                <div class="bg-sky-50 p-3 rounded-lg border-l-4 border-sky-500">
-                                    <strong class="text-sky-900 block mb-0.5"><i class="fa-solid fa-lightbulb text-sky-600 mr-1"></i> Cara Penanganan:</strong>
-                                    <p class="text-slate-700">${item.solusi}</p>
-                                </div>
-                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-2 group-hover:text-brand-600 transition">${item.nama}</h3>
+                            <p class="text-slate-500 text-xs sm:text-sm line-clamp-2 mb-4">${item.deskripsi}</p>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1">
+                                <i class="fa-regular fa-clock text-emerald-500"></i> ${item.waktuUrai}
+                            </span>
+                            <span class="text-xs font-bold text-brand-600 group-hover:translate-x-1 transition duration-300 flex items-center gap-1">
+                                Detail <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                            </span>
                         </div>
                     `;
+
+                    card.addEventListener('click', () => openModal(item));
                     wasteGrid.appendChild(card);
                 });
             }
 
-            // Filter & Search Functionality
-            function filterData() {
-                const searchValue = searchInput.value.toLowerCase();
-                const filterValue = filterSelect.value;
-
-                const filtered = wasteData.filter(item => {
-                    const matchesSearch = item.nama.toLowerCase().includes(searchValue) || item.deskripsi.toLowerCase().includes(searchValue);
-                    const matchesFilter = filterValue === 'all' || item.kategori === filterValue;
-                    return matchesSearch && matchesFilter;
+            // Filter Tab Logic
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => {
+                        b.classList.remove('bg-white', 'shadow-sm', 'text-slate-900');
+                        b.classList.add('text-slate-700');
+                    });
+                    btn.classList.add('bg-white', 'shadow-sm', 'text-slate-900');
+                    currentFilter = btn.getAttribute('data-filter');
+                    renderCards();
                 });
+            });
 
-                renderCards(filtered);
+            searchInput.addEventListener('input', renderCards);
+
+            // Modal Logic
+            const detailModal = document.getElementById('detailModal');
+            const modalContent = document.getElementById('modalContent');
+            const modalBody = document.getElementById('modalBody');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+
+            function openModal(item) {
+                modalBody.innerHTML = `
+                    <div class="mb-4 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center font-bold">
+                            <i class="fa-solid ${item.icon || 'fa-trash'}"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider">${item.kategori}</span>
+                            <h3 class="text-2xl font-extrabold text-slate-900">${item.nama}</h3>
+                        </div>
+                    </div>
+                    
+                    <p class="text-slate-600 text-sm mb-6">${item.deskripsi}</p>
+
+                    <div class="space-y-3 text-xs sm:text-sm">
+                        <div class="p-3.5 bg-emerald-50 rounded-xl border-l-4 border-emerald-500">
+                            <strong class="text-emerald-900 block mb-1"><i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Kelebihan & Potensi Daur Ulang:</strong>
+                            <p class="text-slate-700">${item.kelebihan}</p>
+                        </div>
+                        <div class="p-3.5 bg-rose-50 rounded-xl border-l-4 border-rose-500">
+                            <strong class="text-rose-900 block mb-1"><i class="fa-solid fa-triangle-exclamation text-rose-600 mr-1"></i> Dampak Pencemaran:</strong>
+                            <p class="text-slate-700">${item.kekurangan}</p>
+                        </div>
+                        <div class="p-3.5 bg-sky-50 rounded-xl border-l-4 border-sky-500">
+                            <strong class="text-sky-900 block mb-1"><i class="fa-solid fa-lightbulb text-sky-600 mr-1"></i> Langkah Penanganan Cerdas:</strong>
+                            <p class="text-slate-700">${item.solusi}</p>
+                        </div>
+                    </div>
+                `;
+
+                detailModal.classList.remove('hidden');
+                setTimeout(() => {
+                    detailModal.classList.remove('opacity-0');
+                    modalContent.classList.remove('scale-95');
+                }, 10);
             }
 
-            searchInput.addEventListener('input', filterData);
-            filterSelect.addEventListener('change', filterData);
+            function closeModal() {
+                detailModal.classList.add('opacity-0');
+                modalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    detailModal.classList.add('hidden');
+                }, 300);
+            }
+
+            closeModalBtn.addEventListener('click', closeModal);
+            detailModal.addEventListener('click', (e) => {
+                if (e.target === detailModal) closeModal();
+            });
 
             // Logika Kuis Interaktif
-            let currentQuestionIndex = 0;
-            let score = 0;
+            let quizIdx = 0;
+            let quizScore = 0;
 
             const quizQuestion = document.getElementById('quizQuestion');
             const quizOptions = document.getElementById('quizOptions');
             const quizFeedback = document.getElementById('quizFeedback');
-            const quizProgress = document.getElementById('quizProgress');
+            const quizProgressText = document.getElementById('quizProgressText');
             const quizScoreText = document.getElementById('quizScoreText');
+            const progressBar = document.getElementById('progressBar');
             const nextBtn = document.getElementById('nextBtn');
             const restartBtn = document.getElementById('restartBtn');
 
-            function loadQuestion() {
+            function loadQuiz() {
                 quizFeedback.classList.add('hidden');
                 nextBtn.classList.add('hidden');
 
-                const currentQuiz = quizData[currentQuestionIndex];
-                quizProgress.innerText = `Pertanyaan ${currentQuestionIndex + 1} dari ${quizData.length}`;
-                quizQuestion.innerText = `Di kategori manakah sampah "${currentQuiz.item}" berada?`;
+                const q = quizQuestions[quizIdx];
+                quizProgressText.innerText = `Pertanyaan ${quizIdx + 1} dari ${quizQuestions.length}`;
+                progressBar.style.width = `${((quizIdx + 1) / quizQuestions.length) * 100}%`;
+                quizQuestion.innerText = `"${q.item}"`;
 
                 quizOptions.innerHTML = '';
-                const categories = ['Organik', 'Anorganik', 'B3'];
-
-                categories.forEach(cat => {
+                ['Organik', 'Anorganik', 'B3'].forEach(cat => {
                     const btn = document.createElement('button');
-                    btn.className = "w-full bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-800 font-semibold py-3 px-4 rounded-xl border border-slate-200 transition text-sm";
+                    btn.className = "w-full bg-slate-800/80 hover:bg-brand-500 hover:text-slate-950 text-white font-bold py-3.5 px-4 rounded-xl border border-slate-700 transition duration-300 text-sm";
                     btn.innerText = cat;
-                    btn.onclick = () => selectAnswer(cat);
+                    btn.onclick = () => checkQuizAnswer(cat);
                     quizOptions.appendChild(btn);
                 });
             }
 
-            function selectAnswer(selectedCategory) {
-                const currentQuiz = quizData[currentQuestionIndex];
-                const isCorrect = selectedCategory === currentQuiz.jawaban;
+            function checkQuizAnswer(selected) {
+                const q = quizQuestions[quizIdx];
+                const isCorrect = selected === q.jawaban;
 
-                // Disable semua tombol pilihan
                 Array.from(quizOptions.children).forEach(btn => {
                     btn.disabled = true;
-                    btn.classList.add('cursor-not-allowed', 'opacity-60');
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
                 });
 
+                quizFeedback.classList.remove('hidden');
+
                 if (isCorrect) {
-                    score += 100;
-                    quizScoreText.innerText = `Skor: ${score}`;
-                    quizFeedback.className = "p-4 rounded-lg text-center font-semibold text-sm mb-4 bg-emerald-100 text-emerald-800 border border-emerald-300 block";
-                    quizFeedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Benar! ${currentQuiz.penjelasan}`;
+                    quizScore += 20;
+                    quizScoreText.innerText = `Skor: ${quizScore}`;
+                    quizFeedback.className = "p-4 rounded-xl text-center font-semibold text-sm mb-6 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+                    quizFeedback.innerHTML = `<i class="fa-solid fa-circle-check mr-1 text-emerald-400"></i> <strong>Tepat Sekali!</strong> ${q.penjelasan}`;
                 } else {
-                    quizFeedback.className = "p-4 rounded-lg text-center font-semibold text-sm mb-4 bg-rose-100 text-rose-800 border border-rose-300 block";
-                    quizFeedback.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 mr-1"></i> Kurang Tepat. Jawaban yang benar adalah <strong>${currentQuiz.jawaban}</strong>. ${currentQuiz.penjelasan}`;
+                    quizFeedback.className = "p-4 rounded-xl text-center font-semibold text-sm mb-6 bg-rose-500/20 text-rose-300 border border-rose-500/30";
+                    quizFeedback.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1 text-rose-400"></i> <strong>Kurang Tepat.</strong> Jawaban benar: <span class="underline">${q.jawaban}</span>. ${q.penjelasan}`;
                 }
 
-                if (currentQuestionIndex < quizData.length - 1) {
+                if (quizIdx < quizQuestions.length - 1) {
                     nextBtn.classList.remove('hidden');
                 } else {
                     restartBtn.classList.remove('hidden');
@@ -299,21 +675,30 @@
             }
 
             nextBtn.addEventListener('click', () => {
-                currentQuestionIndex++;
-                loadQuestion();
+                quizIdx++;
+                loadQuiz();
             });
 
             restartBtn.addEventListener('click', () => {
-                currentQuestionIndex = 0;
-                score = 0;
+                quizIdx = 0;
+                quizScore = 0;
                 quizScoreText.innerText = `Skor: 0`;
                 restartBtn.classList.add('hidden');
-                loadQuestion();
+                loadQuiz();
             });
 
-            // Inisialisasi awal
-            renderCards(wasteData);
-            loadQuestion();
+            // Form Submit via WA
+            document.getElementById('contactForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = e.target.querySelector('input').value;
+                const msg = e.target.querySelector('textarea').value;
+                const text = `Halo Admin EcoSort, nama saya ${name}. Laporan/Pesan saya: ${msg}`;
+                window.open(`https://wa.me/62895630624073?text=${encodeURIComponent(text)}`, '_blank');
+            });
+
+            // Init App
+            renderCards();
+            loadQuiz();
         });
     </script>
 </body>
